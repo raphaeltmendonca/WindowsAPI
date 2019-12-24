@@ -281,11 +281,11 @@ process injection.
 
 **PulseEvent:**
 
-**SetFilePointer
+**SetFilePointer:**
 
-**SetEndOfFile
+**SetEndOfFile:**
 
-**GetFileSizeEx
+**GetFileSizeEx:**
 
 **FindClose:**
 
@@ -339,15 +339,15 @@ process injection.
 
 **HeapFree:**
 
-**HeapSetInformation
+**HeapSetInformation:**
 
-**HeapQueryInformation
+**HeapQueryInformation:**
 
-**HeapCompact
+**HeapCompact:**
 
-**HeapValidate
+**HeapValidate:**
 
-**HeapWalk
+**HeapWalk:**
 
 **GetProcessHeaps:**
 
@@ -359,9 +359,9 @@ process injection.
 
 **DestroyHeap:**
 
-**CallWindowProc
+**CallWindowProc:**
 
-**StringCchPrintfA
+**StringCchPrintfA:**
 
 **NtReadVirtualMemory:**
 
@@ -374,7 +374,7 @@ process injection.
 
 **Send:**
 
-**Recv
+**Recv:**
 
 **Bind:**
 
@@ -384,22 +384,22 @@ process injection.
 
 **Connect:**
 
-**WSAStartup
+**WSAStartup:**
 
-**URLDownloadToFile
+**URLDownloadToFile:**
 
-**InternetOpen
+**InternetOpen:**
 
-**InternetConnect
+**InternetConnect:**
 
-**InternetOpenUrlA
+**InternetOpenUrlA:**
 
-**InternetReadFile
+**InternetReadFile:**
 
-**HttpOpenRequestA
+**HttpOpenRequestA:**
 
-**HttpSendRequestA
+**HttpSendRequestA:**
 
-**HttpQueryInfoA
+**HttpQueryInfoA:**
 
-**InternetGetConnectState
+**InternetGetConnectState:**

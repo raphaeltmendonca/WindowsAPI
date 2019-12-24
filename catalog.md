@@ -289,7 +289,7 @@ process injection.
 
 **FindClose:**
 
-**GetFileInformationByHandle
+**GetFileInformationByHandle:**
 
 **GetFullPathName:**
 

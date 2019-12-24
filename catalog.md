@@ -3,10 +3,10 @@
 
 •	**Accept:** This function is used to listen for incoming connections. This function indicates that the program will listen for incoming connections on a socket. It is mostly used by malware to communicate with their Command and Communication server.
 
-•	:**AdjustTokenPrivileges:** This function is used to enable or disable specific access privileges. In a process injection attack, 
+•	**AdjustTokenPrivileges:** This function is used to enable or disable specific access privileges. In a process injection attack, 
 this function is used by malware to gain additional permissions.
 
-•	:**AttachThreadInput:** This function attaches the input processing from one thread to another so that the second thread receives input events such as keyboard and mouse events. Keyloggers and other spyware use this function.
+•	**AttachThreadInput:** This function attaches the input processing from one thread to another so that the second thread receives input events such as keyboard and mouse events. Keyloggers and other spyware use this function.
 
 •	**Bind:** This function is used to associate a local address to a socket in order to listen for incoming connections.
 

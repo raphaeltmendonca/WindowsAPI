@@ -1,69 +1,69 @@
 # Windows API
 
 
-•	Accept: This function is used to listen for incoming connections. This function indicates that the program will listen for incoming connections on a socket. It is mostly used by malware to communicate with their Command and Communication server.
+•	**Accept:** This function is used to listen for incoming connections. This function indicates that the program will listen for incoming connections on a socket. It is mostly used by malware to communicate with their Command and Communication server.
 
-•	AdjustTokenPrivileges: This function is used to enable or disable specific access privileges. In a process injection attack, 
+•	:**AdjustTokenPrivileges:** This function is used to enable or disable specific access privileges. In a process injection attack, 
 this function is used by malware to gain additional permissions.
 
-•	AttachThreadInput: This function attaches the input processing from one thread to another so that the second thread receives input events such as keyboard and mouse events. Keyloggers and other spyware use this function.
+•	:**AttachThreadInput:** This function attaches the input processing from one thread to another so that the second thread receives input events such as keyboard and mouse events. Keyloggers and other spyware use this function.
 
-•	Bind: This function is used to associate a local address to a socket in order to listen for incoming connections.
+•	**Bind:** This function is used to associate a local address to a socket in order to listen for incoming connections.
 
-•	BitBlt: This function is used to copy graphic data from one device to another. Spyware sometimes uses this function to capture screenshots.
+•	**BitBlt:** This function is used to copy graphic data from one device to another. Spyware sometimes uses this function to capture screenshots.
 
-•	CertOpenSystemStore: This function is used to access the certificates stored on the local system.
+•	**CertOpenSystemStore:** This function is used to access the certificates stored on the local system.
 
-•	Connect: This function is used to connect to a remote socket. Malware often uses low-level functionality to connect to a command-and-control server. It is mostly used by malware to communicate with their Command and Communication server.
+•	**Connect:** This function is used to connect to a remote socket. Malware often uses low-level functionality to connect to a command-and-control server. It is mostly used by malware to communicate with their Command and Communication server.
 
-•	ConnectNamedPipe: This function is used to create a server pipe for interprocess communication that will wait for a client pipe to connect. Backdoors and reverse shells sometimes use ConnectNamedPipe to simplify connectivity to a command-and-control server.
+•	**ConnectNamedPipe:** This function is used to create a server pipe for interprocess communication that will wait for a client pipe to connect. Backdoors and reverse shells sometimes use ConnectNamedPipe to simplify connectivity to a command-and-control server.
 
-•	ControlService: This function is used to start, stop, modify, or send a signal to a running service. If malware is using its own malicious service, code needs to be analyzed that implements the service in order to determine the purpose of the call.
+•	**ControlService:** This function is used to start, stop, modify, or send a signal to a running service. If malware is using its own malicious service, code needs to be analyzed that implements the service in order to determine the purpose of the call.
 
-•	CreateFile: Creates a new file or opens an existing file.
+•	**CreateFile:** Creates a new file or opens an existing file.
 
-•	CreateFileMapping: This function is used to create a handle to a file mapping that loads a file into memory and makes it accessible via memory addresses. Launchers, loaders, and injectors use this function to read and modify PE files.
+•	**CreateFileMapping:** This function is used to create a handle to a file mapping that loads a file into memory and makes it accessible via memory addresses. Launchers, loaders, and injectors use this function to read and modify PE files.
 
-•	CreateMutex: This function creates a mutual exclusion object that can be used by malware to ensure that only a single instance of the malware is running on a system at any given time. Malware often uses fixed names for mutexes, which can be good host-based indicators to detect additional installations of the malware.
+•	**CreateMutex:** This function creates a mutual exclusion object that can be used by malware to ensure that only a single instance of the malware is running on a system at any given time. Malware often uses fixed names for mutexes, which can be good host-based indicators to detect additional installations of the malware.
 
-•	CreateProcess: This function creates and launches a new process. If malware creates a new process, new process needs to be analyzed as well.
+•	**CreateProcess:** This function creates and launches a new process. If malware creates a new process, new process needs to be analyzed as well.
 
-•	CreateRemoteThread: This function is used to start a thread in a remote process. Launchers and stealth malware use CreateRemoteThread to inject code into a different process.
+•	**CreateRemoteThread:** This function is used to start a thread in a remote process. Launchers and stealth malware use CreateRemoteThread to inject code into a different process.
 
-•	CreateService: This function is used to create a service that can be started at boot time. Malware uses CreateService for persistence, stealth, or to load kernel drivers.
+•	**CreateService:** This function is used to create a service that can be started at boot time. Malware uses CreateService for persistence, stealth, or to load kernel drivers.
 
-•	CreateToolhelp32Snapshot: This function is used to create a snapshot of processes, heaps, threads, and modules. Malware often uses this function as part of code that iterates through processes or threads.
+•	**CreateToolhelp32Snapshot:** This function is used to create a snapshot of processes, heaps, threads, and modules. Malware often uses this function as part of code that iterates through processes or threads.
 
-•	CryptAcquireContext: This function is often the first function used by malware to initialize the use of Windows encryption.
+•	**CryptAcquireContext:** This function is often the first function used by malware to initialize the use of Windows encryption.
 
-•	DeviceIoControl: This function sends a control message from user space to a device driver. Kernel malware that needs to pass information between user space and kernel space often use this function.
+•	**DeviceIoControl:** This function sends a control message from user space to a device driver. Kernel malware that needs to pass information between user space and kernel space often use this function.
 
-•	EnableExecuteProtectionSupport: This function is used to modify the Data Execution Protection (DEP) settings of the host, making it more susceptible to attack.
+•	**EnableExecuteProtectionSupport:** This function is used to modify the Data Execution Protection (DEP) settings of the host, making it more susceptible to attack.
 
-•	EnumProcesses: This function is used to enumerate through running processes on the system. Malware often enumerates through processes to find a process into which to inject.
+•	**EnumProcesses:** This function is used to enumerate through running processes on the system. Malware often enumerates through processes to find a process into which to inject.
 
-•	EnumProcessModules: This function is used to enumerate the loaded modules (executables and DLLs) for a given process. Malware enumerates through modules when doing an injection.
+•	**EnumProcessModules:** This function is used to enumerate the loaded modules (executables and DLLs) for a given process. Malware enumerates through modules when doing an injection.
 
-•	FindFirstFile/FindNextFile: This function is used to search through a directory and enumerate the file system. (Ransomware)
+•	**FindFirstFile/FindNextFile:** This function is used to search through a directory and enumerate the file system. (Ransomware)
 
-•	FindResource: This function is used to find a resource in an executable or loaded DLL. Malware sometimes uses resources to 
+•	**FindResource:** This function is used to find a resource in an executable or loaded DLL. Malware sometimes uses resources to 
 store strings, configuration information, or other malicious files. If this function is used, then check for an .rsrc section in the malware’s PE header.
 
-•	FindWindow: This function is used to search for an open window on the desktop. Sometimes this function is used as an anti-debugging technique to search for OllyDbg windows.
+•	**FindWindow:** This function is used to search for an open window on the desktop. Sometimes this function is used as an anti-debugging technique to search for OllyDbg windows.
 
-•	FtpPutFile: This function is used to upload a file to remote FTP server.
+•	**FtpPutFile:** This function is used to upload a file to remote FTP server.
 
-•	GetAdaptersInfo: This function is used to obtain information about the network adapters on the system. Backdoors sometimes call GetAdaptersInfo in the information-gathering phase to gather information about infected machines. In some cases, it’s used to gather MAC addresses to check for VMware as part of anti-virtual machine techniques.
+•	**GetAdaptersInfo:** This function is used to obtain information about the network adapters on the system. Backdoors sometimes call GetAdaptersInfo in the information-gathering phase to gather information about infected machines. In some cases, it’s used to gather MAC addresses to check for VMware as part of anti-virtual machine techniques.
 
-•	GetAsyncKeyState: This function is used to determine whether a particular key is being pressed. Malware sometimes uses this function to implement a keylogger.
+•	**GetAsyncKeyState:** This function is used to determine whether a particular key is being pressed. Malware sometimes uses this function to implement a keylogger.
 
-•	GetDC: This function returns a handle to a device context for a window or the whole screen. Spyware that takes screen captures often uses this function.
+•	**GetDC:** This function returns a handle to a device context for a window or the whole screen. Spyware that takes screen captures often uses this function.
 
-•	GetForegroundWindow: This function returns a handle to the window currently in the foreground of the desktop. Keyloggers commonly use this function to determine in which window the user is entering his keystrokes.
+•	**GetForegroundWindow:** This function returns a handle to the window currently in the foreground of the desktop. Keyloggers commonly use this function to determine in which window the user is entering his keystrokes.
 
-•	Gethostbyname: This function is used to perform a DNS lookup on a particular hostname prior to making an IP connection to a remote host. Hostnames that serve as command and- control servers often make good network-based signatures.
+•	**Gethostbyname:** This function is used to perform a DNS lookup on a particular hostname prior to making an IP connection to a remote host. Hostnames that serve as command and- control servers often make good network-based signatures.
 
-•	Gethostname: This function is used to retrieve the hostname of the computer. Backdoors sometimes use gethostname in information gathering phase of the victim machine.
+•	**Gethostname:** This function is used to retrieve the hostname of the computer. Backdoors sometimes use gethostname in information gathering phase of the victim machine.
 
 •	GetKeyState: This function is used by keyloggers to obtain the status of a particular key on the keyboard.
 

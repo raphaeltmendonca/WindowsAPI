@@ -321,7 +321,7 @@ process injection.
 
 **GetExceptionCode:**
 
-**ExitThread
+**ExitThread:**
 
 **ExitProcess:**
 

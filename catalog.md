@@ -403,3 +403,76 @@ process injection.
 **HttpQueryInfoA:**
 
 **InternetGetConnectState:**
+
+# ANTI DEBUGGIND Tricks
+
+
+**IsDebuggerPresent:** Calls the IsDebuggerPresent() API. This function is part of the Win32 Debugging API and it returns TRUE if a user mode debugger is present. Internally, it simply returns the value of the PEB->BeingDebugged flag.
+
+**CheckRemoteDebuggerPresent:** CheckRemoteDebuggerPresent() is another Win32 Debugging API function; it can be used to check if a remote process is being debugged. However, we can also use this as another method for checking if our own process is being debugged. This API internally calls the NTDLL export NtQueryInformationProcess function with the SYSTEM_INFORMATION_CLASS set to 7 (ProcessDebugPort).
+
+**BeingDebugged:** Checks if the BeingDebugged flag is set in the Process Environment Block (PEB). This is effectively the same code that IsDebuggerPresent() executes internally. The PEB pointer is fetched from DWORD FS:[0x30] on x86_32 and QWORD GS:[0x60] on x86_64.
+
+**NtGlobalFlag:** NtGlobalFlag is a DWORD value inside the process PEB. This value contains many flags set by the OS that affects the way the process runs. When a process is being debugged, the flags FLG_HEAP_ENABLE_TAIL_CHECK (0x10), FLG_HEAP_ENABLE_FREE_CHECK (0x20), and FLG_HEAP_VALIDATE_PARAMETERS(0x40) are set for the process
+
+If the 32-bit executable is being run on a 64-bit system, both the 32-bit and 64-bit PEBs are checked. The WoW64 PEB address is fetched via the WoW64 Thread Environment Block (TEB) at FS:[0x18]-0x2000.
+
+**ProcessHeap (Flags):** Check if the Flags field of the ProcessHeap structure in the PEB has a value greater than 2.
+
+**ProcessHeap (ForceFlags):** Check if the ForceFlags field of the ProcessHeap structure in the PEB has a value greater than 0.
+
+**NtQueryInformationProcess (ProcessDebugPort):** Calls the NtQueryInformationProcess API with ProcessDebugPort (0x07) information class.
+
+The test returns true if the operation succeeds and the returned value is nonzero.
+
+**NtQueryInformationProcess (ProcessDebugObject):** Calls the NtQueryInformationProcess API with ProcessDebugObjectHandle (0x1E) information class.
+
+The test returns true if the operation succeeds and the returned value is nonzero.
+
+**NtQueryInformationProcess (ProcessDebugFlags):** Calls the NtQueryInformationProcess API with ProcessDebugFlags (0x1F) information class.
+
+The test returns true if the operation succeeds and the returned value is nonzero.
+
+**NtSetInformationThread (HideThreadFromDebugger):** Calls the NtSetInformationThread API with the ThreadHideFromDebugger (0x11) information class.
+
+The API is first called with a bogus class length value to catch out hooks that ignore the information data and length - if the call succeeds we know it is hooked. Next it is called with a bogus thread handle - if the call succeeds we know it is hooked. Finally the API is called properly, and on Windows Vista and later the flag is checked using the NtQueryInformationThread API.
+
+**NtQueryObject (ObjectTypeInformation):**
+
+
+**NtQueryObject (ObjectAllTypesInformation):**
+
+**CloseHanlde (NtClose) Invalide Handle:** One well-known technique for detecting a debugger involves the kernel32 CloseHandle() function. If an invalid handle is passed to the kernel32CloseHandle() function (or directly to the ntdll NtClose() function, or the kernel32FindVolumeMountPointClose() function on Windows 2000and later (which simply calls the kernel32CloseHandle() function)), and a debugger is present,then an EXCEPTION_INVALID_HANDLE (0xC0000008)exception will be raised. This exception can be intercepted by an exception handler, and is an indication that a debugger is running.
+
+**SetHandleInformation (Protected Handle):**
+
+**UnhandledExceptionFilter:** When an exception occurs, and no registered Exception Handlers exist (neither Structured nor Vectored), or if none of the registered handlers handles the exception, then the kernel32 UnhandledExceptionFilter() function will be called as a last resort. If no debugger is present (which is determined by calling the ntdll NtQueryInformationProcess() function with the ProcessDebugPort class), then the handler will be called that was registered by the kernel32 SetUnhandledExceptionFilter() function. If a debugger is present, then that call will not be reached. Instead, the exception will be passed to the debugger. The function determines the presence of a debugger by calling the ntdll NtQueryInformationProcess function with the ProcessDebugPort class. The missing exception can be used to infer the presence of the debugger.
+
+**OutputDebugString (GetLastError()):** The kernel32 OutputDebugString() function can demonstrate different behaviour, depending on the version of Windows, and whether or not a debugger is present. The most obvious difference in be haviourthat the kernel32 GetLastError() function will return zero if a debugger is present, and non-zero if a debugger is not present. However, this applies only to Windows NT/2000/XP. On Windows Vista and later, the error code is unchanged in all cases.
+
+The reason why it worked was that Windows attempted to open a mapping to an object called "DBWIN_BUFFER". When it failed, the error code is set. Following that was a call to the ntdll DbgPrint() function. As noted above, if a debugger is present, the exception might be consumed by the debugger, resulting in the error code being cleared. If no debugger is present, then the exception would be consumed by Windows, and the error code would remain. However, in Windows Vista and later, the error code is restored to the value that it had prior to the kernel32 OutputDebugString() function being called. It is not cleared explicitly,resulting in this detection technique becoming completely unreliable.
+
+The function is perhaps most well-known because of a bug in OllyDbg v1.10 that results from its use.OllyDbg passes user-defined data directly to the msvcrt _vsprintf() function. Those data can contain string-formatting tokens. A specific token in a specific position will cause the function to attempt to access memory using one of the passed parameters. A number of variations of the attack exist, all of which are essentially randomly chosen token combinations that happen to work. However, all that is required is three tokens. The first two tokens are entirely arbitrary. The third token must be a "%s". This is because the _vsprintf() function calls the __vprinter() function, and passes a zero as the fourth parameter. The fourth parameter is accessed by the third token, if the "%s" is used there. The result is a null-pointer access, and a crash. The bug cannot be exploited to execute arbitrary code.
+
+**Hardware Breakpoints (SEH / GetThreadContext):** When an exception occurs, Windows creates a context structure to pass to the exception handler. The structure will contain the values of the general registers, selectors, control registers, and the debug registers. If a debugger is present and passes the exception to the debuggee with hardware breakpoints in use, then the debug registers will contain values that reveal the presence of the debugger.
+
+**Software Breakpoints (INT3 / 0xCC):**
+
+**Memory Breakpoints (PAGE_GUARD):** The kernel32 VirtualProtect() function (or thekernel32 VirtualProtectEx() function, or then ntdll NtProtectVirtualMemory() function) can be used to allocate "guard" pages. Guard pages are pages that trigger an exception the first time that they are accessed. They are commonly placed at the bottom of a stack, to intercept a potential problem before it becomes unrecoverable. Guard pages can also be used to detect a debugger. The two preliminary steps are to register an exception handler, and to allocate the guard page. The order of these steps is not important. Typically, the page is allocated initially as writable and executable, to allow some content to be placed in it, though this is entirely optional. After filling the page, the page protections are altered to convert the page to a guard page. The next step is to attempt to execute something from the guard page. This should result in an EXCEPTION_GUARD_PAGE (0x80000001) exception being received by the exception handler. However,if a debugger is present, then the debugger might intercept the exception and allow the execution to continue. This behaviour is known to occur in OllyDbg.
+
+**Interrupt 0x2d:** The interrupt 0x2D is a special case. When it is executed, Windows uses the current EIP register value as the exception address, and then it increments by one the EIP register value. However, Windows also examines the value in the EAX register to determine how to adjust the exception address. If the EAX register has the value of 1, 3, or 4 on all versions of Windows, or the value 5 on Windows Vista and later,then Windows will increase by one the exception address. Finally, it issues an EXCEPTION_BREAKPOINT(0x80000003) exception if a debugger is present. The interrupt 0x2D behaviour can cause trouble for debuggers. The problem is that some debuggers might use the EIP register value as the address from which to resume, while other debuggers might use the exception address as the address from which to resume.This can result in a single-byte instruction being skipped, or the execution of a completely different instruction because the first byte is missing. These behaviours can be used to infer the presence of the debugger.
+
+**Interrupt 1:**
+
+**Parent Process (Explorer.exe):** Users typically execute applications by clicking on an icon which is displayed by the shell process(Explorer.exe). As a result, the parent process of the executed process will be Explorer.exe. Of course, if the application is executed from the command-line, then the parent process of the executed process will be the command window process.Executing an application by debugging it will cause the parent process of the executed process to be the debugger process.Executing applications from the command-line can cause problems for certain applications, because they expect the parent process to be Explorer.exe. Some applications check the parent process name,expecting it to be "Explorer.exe". Some applications compare the parent process ID against that of Explorer.exe. A mismatch in either case might result in the application thinking that it is being debugged. At this point. The simplest way to obtain the process ID of Explorer.exe is by calling the user32 GetShellWindow() and user32 GetWindowThreadProcessId() functions. That leaves the process ID and name of the parent process of the current process, which can be obtained by calling the ntdll NtQueryInformationProcess() function with the ProcessBasicInformation class.
+
+**SeDebugPrivilege (Csrss.exe):** The kernel32 OpenProcess() function (or the ntdll NtOpenProcess() function) has at times been claimed to detect the presence of a debugger when used on the "csrss.exe" process. This is in correct. While it is true that the function call will succeed in the presence of some debuggers, this is due to aside-effect of the debugger's behaviour(specifically, acquiring the debug privilege), and not due to the debugger itself (this should be obvious since the function call does not succeed when used with certain debuggers). All it reveals is that the user account for the process is a member of the administrators group and it has the debug privilege. The reason is that the success or failure of the function call is limited only by the process privilege level. If the user account of the process is a member of the administrators group and has the debug privilege, then the function call will succeed; if not, then not. It is not sufficient fora standard user to acquire the debug privilege, nor can an administrator call the function successfully without it. The process ID of the csrss.exe process can be acquired by the ntdll CsrGetProcessId() function on Windows XP and later.
+
+**NtYieldExecution / SwitchToThread:**
+
+**TLS callbacks:**
+
+**Process jobs:**
+
+**Memory write watching:**
+

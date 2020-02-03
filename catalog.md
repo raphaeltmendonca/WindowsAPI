@@ -368,7 +368,7 @@ process injection.
 **NtWriteVirtualMemory:**
 
 
-# NETWORKING API
+# Networking API
 
 **Socket:**
 
@@ -404,8 +404,7 @@ process injection.
 
 **InternetGetConnectState:**
 
-# ANTI DEBUGGIND Tricks
-
+# Anti Debugging Tricks
 
 **IsDebuggerPresent:** Calls the IsDebuggerPresent() API. This function is part of the Win32 Debugging API and it returns TRUE if a user mode debugger is present. Internally, it simply returns the value of the PEB->BeingDebugged flag.
 

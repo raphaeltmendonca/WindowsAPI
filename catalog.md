@@ -368,7 +368,7 @@ process injection.
 **NtWriteVirtualMemory:**
 
 
-# Networking API
+# Networking 
 
 **Socket:**
 
@@ -404,7 +404,7 @@ process injection.
 
 **InternetGetConnectState:**
 
-# Anti Debugging Tricks
+# Anti Debugging
 
 **IsDebuggerPresent:** Calls the IsDebuggerPresent() API. This function is part of the Win32 Debugging API and it returns TRUE if a user mode debugger is present. Internally, it simply returns the value of the PEB->BeingDebugged flag.
 
@@ -474,4 +474,87 @@ The function is perhaps most well-known because of a bug in OllyDbg v1.10 that r
 **Process jobs:**
 
 **Memory write watching:**
+
+
+# Process Injection
+
+**CreateToolhelp32Snapshot:**
+
+**Process32First:**
+
+**Process32Next:**
+
+**VirtualAllocEx:**
+
+**WriteProcessMemory:**
+
+**CreateRemoteThread:**
+
+**NtCreateThreadEx:**
+
+**RtlCreateUserThread:**
+
+**LoadLibrary:**
+
+**CreateProcess:**
+
+**ZwUnmapViewOfSection:**
+
+**NtUnmapViewOfSection:**
+
+**SetThreadContext:**
+
+**Thread32First:**
+
+**OpenThread:**
+
+**SuspendThread:**
+
+**SetWindowsHookEx:**
+
+**GetProcAddress:**
+
+**RegCreateKeyEx:**
+
+**RegSetValueEx:**
+
+**CreateProcess:**
+
+**CreateProcessAsUser:**
+
+**CreateProcessWithLogonW:**
+
+**CreateProcessWithTokenW:**
+
+**WinExec:**
+
+**SleepEx:**
+
+**SignalObjectAndWait:**
+
+**MsgWaitForMultipleObjectsEx:**
+
+**WaitForMultipleObjectsEx:**
+
+**WaitForSingleObjectEx:**
+
+**OpenThread:**
+
+**QueueUserAPC:**
+
+**SetWindowLong:**
+
+**SendNotifyMessage:**
+
+**NTMapViewOfSection:**
+
+**GetWindowLong:**
+
+**SetWindowLong:**
+
+**SendNotifyMessage:**
+
+**Shell_TrayWnd:**
+
+
 
